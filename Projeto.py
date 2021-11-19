@@ -2,20 +2,6 @@ from PIL import Image
 import numpy as np
 import math
 
-def split_channels(img):
-    Red = np.asarray(img)
-    Red[:,:,1] *= 0
-    Red[:,:,2] *= 0
-
-    Green = np.asarray(img)
-    Green[:,:,0] *= 0
-    Green[:,:,2] *= 0
-
-    Blue = np.asarray(img)
-    Blue[:,:,0] *= 0
-    Blue[:,:,1] *= 0
-    
-    return Image.fromarray(Red), Image.fromarray(Green), Image.fromarray(Blue)
 def which_c(number):
     if(number == 0):
         return math.sqrt(0.5)
