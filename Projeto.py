@@ -7,6 +7,15 @@ def which_c(number):
         return math.sqrt(0.5)
     else:
         return 1
+def dct(x,N):
+    X = np.zeros(N)
+    for k in range(N):
+        c = which_c(k)
+        summ = 0
+        for n in range(N):
+            summ += x[n] * math.cos(((2*n+1)*math.pi*k)/(2*N))
+        X[k] = math.sqrt(2/N) * c * summ
+    return X
 
 img_src = Image.open("lena256.png")
 img_arr = np.asarray(img_src)
@@ -25,20 +34,13 @@ X = np.zeros((R,C))
 #         X[k,l] = (2/math.sqrt(R*C)) * c_k * c_l * summ
 
 for k in range(R):
-    c_k = which_c(k)
-    sum_k = 0
-    for m in range(R):
-        sum_k += img_arr[m,:] * math.cos(((2*m + 1)*k*math.pi)/(2*R))
-    X[k,:] = math.sqrt(2/R) * c_k * sum_k
+    X[k,:] = dct(img_arr[k,:],R)
 for l in range(C):
-    c_l = which_c(l)
-    sum_l = 0
-    for n in range(C):
-        sum_l += X[:,n] * math.cos(((2*n + 1)*l*math.pi)/(2*C))
-    X[:,l] = math.sqrt(2/C) * c_l * sum_l
+    X[:,l] = dct(X[:,l],C)
 
 #X /= X[0][0]
 img_dct = np.log(np.abs(X)+1)
 img_dct *= (255.0/img_dct.max())
 img_dct = Image.fromarray(img_dct)
+img_dct = img_dct.convert("P")
 img_dct.show()
