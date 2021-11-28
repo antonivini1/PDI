@@ -15,7 +15,6 @@ def DCT(x):
             summ += x[n] * math.cos(((2*n+1)*math.pi*k)/(2*N))
         X[k] = math.sqrt(2/N) * c * summ
     return X
-@jit
 def DCT2d(x):
     R,C = x.shape
     X = np.zeros((R,C))
@@ -37,7 +36,6 @@ def iDCT(X):
             summ += X[k] * c * math.cos(((2*n+1)*math.pi*k)/(2*N))
         x[n] = math.sqrt(2/N) * summ
     return x
-@jit
 def iDCT2d(X):
     R,C = X.shape
     x = np.zeros((R,C))
