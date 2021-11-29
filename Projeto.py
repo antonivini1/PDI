@@ -159,8 +159,8 @@ def quest2(snd_name,g,f_c,n):
 
     wavfile.write("Resultados/snd_out.wav", snd_sample, snd_write_int)
 def main():
-    #quest1("lena256.png",100)
-    #quest2("MasEstamosAiPraMais.wav",0.5,12520,3)   
+    #quest1("Arquivos/lena256.png",100)
+    #quest2("Arquivos/MasEstamosAiPraMais.wav",0.5,12520,3)   
 
 
 if __name__== "__main__" :  
