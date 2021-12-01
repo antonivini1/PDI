@@ -1,8 +1,10 @@
+from os import write
 from PIL import Image
 from scipy.io import wavfile
 from numba import jit
 import numpy as np
 import math
+import matplotlib.pyplot as plt
 
 @jit
 def DCT(x):
@@ -48,18 +50,16 @@ def iDCT2d(X):
     return x
 
 @jit
-def DCT_audio(x, filtro = None):
+def DCT_audio(x, Y = None):
     N = len(x)
     X = np.zeros(N)
     for k in range(N):
         c = (math.sqrt(0.5) if (k == 0) else 1)
         summ = 0
-        Y = (1 if filtro == None else filtro[k])
         for n in range(N):
             summ += x[n] * math.cos(((2*n+1)*math.pi*k/(2*N)))
         X[k] = math.sqrt(2/N) * c * summ
-        X[k] *= Y
-    return X
+    return X*Y
 def Reforço_Graves(nsamples, g, f_c, n):
     Y = np.zeros(nsamples)
     for k in range(nsamples):
@@ -148,20 +148,27 @@ def quest2(snd_name,g,f_c,n):
     snd_sample, snd_data = wavfile.read(snd_name)
     print("Convertendo o audio para float e normalizando-o.")
     snd_data_float = snd_data.astype(np.float64) / 2**15
+    #plt.plot(snd_data)
+    #plt.show()
 
     print("Calculando o reforço, aplicando a DCT e a iDCT.")
+    #plt.plot(snd_data)
+    #plt.show()
     Y = Reforço_Graves(len(snd_data_float),g,f_c,n)
-    snd_dct_boosted = DCT_audio(snd_data_float, Y)
-    snd_write = iDCT(snd_dct_boosted)
+    snd_dct = DCT(snd_data_float)
+    snd_dct *= Y
+    snd_write = iDCT(snd_dct)
 
     print("Desnormalizando e reconvertendo o audio para int.")
     snd_write_int = snd_write * 2**15
     snd_write_int = snd_write_int.astype(np.int16)
+    #plt.plot(snd_write_int)
+    #plt.show()
 
     wavfile.write("Resultados/snd_out.wav", snd_sample, snd_write_int)
 def main():
-    quest1("Arquivos/lena256.png",1000)
-    quest2("Arquivos/MasEstamosAiPraMais.wav",0.5,12520,3)   
+    #quest1("Arquivos/lena256.png",1000)
+    #quest2("Arquivos/MasEstamosAiPraMais.wav",0.5,12500,3)   
 
 
 if __name__== "__main__" :  
