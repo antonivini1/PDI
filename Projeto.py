@@ -56,13 +56,14 @@ def DCT_audio(x, filtro = None):
         summ = 0
         Y = (1 if filtro == None else filtro[k])
         for n in range(N):
-            summ += x[n] * math.cos(((2*n+1)*math.pi*(k*Y)/(2*N)))
+            summ += x[n] * math.cos(((2*n+1)*math.pi*k/(2*N)))
         X[k] = math.sqrt(2/N) * c * summ
+        X[k] *= Y
     return X
 def Reforço_Graves(nsamples, g, f_c, n):
     Y = np.zeros(nsamples)
     for k in range(nsamples):
-        Y[k] = (g / (math.sqrt(1 + math.pow(k/f_c, 2 * n)))) + 1
+        Y[k] = (g / (math.sqrt(1 + (k/f_c)**(2*n)))) + 1
     return Y
 
 def quest1(img_name,AC):
@@ -159,8 +160,8 @@ def quest2(snd_name,g,f_c,n):
 
     wavfile.write("Resultados/snd_out.wav", snd_sample, snd_write_int)
 def main():
-    #quest1("Arquivos/lena256.png",100)
-    #quest2("Arquivos/MasEstamosAiPraMais.wav",0.5,12520,3)   
+    quest1("Arquivos/lena256.png",1000)
+    quest2("Arquivos/MasEstamosAiPraMais.wav",0.5,12520,3)   
 
 
 if __name__== "__main__" :  
